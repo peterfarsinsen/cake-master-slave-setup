@@ -1,9 +1,9 @@
 <?php
 /**
-* App model structure to make us eof Master-Slave database setup
+* App model structure to make use of Master-Slave database setup
 *
 */
-class AppModel extends Model 
+class AppModel extends Model
 {
     /**
     * Holds the previous Database config name after switching
@@ -56,16 +56,12 @@ class AppModel extends Model
 
         if(!empty($params) && is_string($params[0])) {
             $updates = array('CREATE', 'DELETE', 'DROP', 'INSERT', 'UPDATE');
-            if(preg_match('/^(' . implode('|', $updates) . ')/i', trim($params[0]))) {
-                $this->_switchDbConfig('master');
-            }
-        }
+            $datasource = preg_match('/^(' . implode('|', $updates) . ')/i', trim($params[0])) ? 'master' : 'default';
 
-        if(!empty($params)) {
-            $result =& call_user_func_array(array($this, 'parent::query'), $params);
-        }
+			$this->setDataSource($datasource);
 
-        $this->_switchDbConfig();
+			$result =& call_user_func_array(array($this, 'parent::query'), $params);
+        }
 
         return $result;
     }
@@ -85,7 +81,7 @@ class AppModel extends Model
         elseif (!empty($this->prevDbConfig)) {
             $this->setDataSource($this->prevDbConfig);
             $this->prevDbConfig = null;
-        }        
+        }
         return true;
     }
 }

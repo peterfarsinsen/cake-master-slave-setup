@@ -1,0 +1,4 @@
+Master Slave database setup.
+Overriding several CakePHP functions and add random slave initiation.
+
+All credits to Farsinsen [http://github.com/farsinsen]
